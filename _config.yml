@@ -3,6 +3,7 @@ title: "The Plus Side"
 description: "Thoughts on people, processes, profits, and everything in between."
 url: "https://skilledservices-plus.github.io"
 baseurl: "/home"
+timezone: Asia/Manila
 
 markdown: kramdown
 permalink: /blog/:year/:month/:day/:title/
