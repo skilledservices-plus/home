@@ -1,0 +1,135 @@
+
+---
+layout: null
+title: The Plus Side
+permalink: /blog/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>The Plus Side | Skilled Services Plus (ss+)</title>
+
+  <meta name="description"
+        content="Thoughts on people, processes, profits, and everything in between.">
+
+  <link rel="stylesheet"
+        href="{{ '/assets/blog/blog.css' | relative_url }}">
+
+  <link rel="icon" type="image/png"
+        href="{{ '/assets/blog/logo-color.png' | relative_url }}">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="mast">
+    <div class="wrap">
+
+      <div class="top">
+        <a class="brandmark"
+           href="{{ '/' | relative_url }}"
+           aria-label="Skilled Services Plus homepage">
+          <img
+            src="{{ '/assets/blog/logo-color.png' | relative_url }}"
+            alt="ss+ symbol">
+        </a>
+
+        <a class="back" href="{{ '/' | relative_url }}">
+          Back to website ↗
+        </a>
+      </div>
+
+      <div class="hero">
+        <h1>The Plus Side<span class="dot">.</span></h1>
+        <p>
+          Thoughts on people, processes, profits,
+          and everything in between.
+        </p>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- BLOG LIST -->
+  <main class="wrap content">
+
+    <h2 class="list-heading">All writing</h2>
+
+    {% assign published_posts = site.posts |
+       where_exp: 'p', 'p.published != false' %}
+
+    {% for post in published_posts %}
+
+    <article class="entry">
+
+      <div class="meta">
+        {{ post.category | default: 'Perspectives' | escape }}
+        ·
+        {{ post.date | date: '%B %-d, %Y' }}
+      </div>
+
+      <h2>
+        <a href="{{ post.url | relative_url }}">
+          {{ post.title | escape }}
+        </a>
+      </h2>
+
+      {% if post.image %}
+      <a href="{{ post.url | relative_url }}">
+        <img class="entry-img"
+             src="{{ post.image | relative_url }}"
+             alt="{{ post.image_alt | default: '' | escape }}">
+      </a>
+      {% endif %}
+
+      {% if post.description %}
+        <p class="excerpt">
+          {{ post.description | escape }}
+        </p>
+      {% else %}
+        <p class="excerpt">
+          {{ post.excerpt | strip_html | truncatewords: 36 }}
+        </p>
+      {% endif %}
+
+      <a class="read" href="{{ post.url | relative_url }}">
+        Read article ↗
+      </a>
+
+    </article>
+
+    {% endfor %}
+
+    {% if published_posts.size == 0 %}
+    <article class="entry">
+      <p class="excerpt">First article coming soon.</p>
+    </article>
+    {% endif %}
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap">
+
+      <a href="{{ '/' | relative_url }}"
+         aria-label="Skilled Services Plus homepage">
+        <img
+          src="{{ '/assets/blog/logo-cream.png' | relative_url }}"
+          alt="ss+ symbol">
+      </a>
+
+      <small>
+        © {{ 'now' | date: '%Y' }}
+        Skilled Services Plus (ss+).
+        All rights reserved.
+      </small>
+
+    </div>
+  </footer>
+
+</body>
+</html>
