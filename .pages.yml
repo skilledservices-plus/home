@@ -1,0 +1,52 @@
+
+media:
+  input: assets/blog/uploads
+  output: /assets/blog/uploads
+
+content:
+  - name: posts
+    label: Blog Articles
+    type: collection
+    path: _posts
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{title}.md"
+    view:
+      primary: title
+      sort: date
+      order: desc
+    fields:
+      - name: title
+        label: Article Title
+        type: string
+        required: true
+
+      - name: date
+        label: Publication Date
+        type: date
+        required: true
+
+      - name: category
+        label: Category
+        type: select
+        options:
+          values:
+            - People
+            - Processes
+            - Profits
+            - Perspectives
+
+      - name: description
+        label: Short Description
+        type: text
+
+      - name: image
+        label: Featured Image (Optional)
+        type: image
+
+      - name: image_alt
+        label: Image Description
+        type: string
+
+      - name: body
+        label: Article Content
+        type: rich-text
