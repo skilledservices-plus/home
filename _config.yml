@@ -17,3 +17,5 @@ defaults:
 
 plugins:
   - jekyll-feed
+feed:
+  path: /blog/feed.xml
