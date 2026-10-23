@@ -56,6 +56,108 @@ permalink: /blog/
   <!-- BLOG LIST -->
   <main class="wrap content">
 
+    
+<!-- THE PLUS SIDE: EMAIL SUBSCRIPTION -->
+<style>
+  .plus-subscribe {
+    max-width: 440px;
+    margin: 12px auto 56px;
+    text-align: center;
+    font-family: Inter, Arial, sans-serif;
+  }
+
+  .plus-subscribe p {
+    margin: 0 0 14px;
+    color: #484149;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .plus-subscribe form {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .plus-subscribe input {
+    flex: 1;
+    min-width: 0;
+    height: 42px;
+    padding: 0 14px;
+    border: 1px solid #dcd5cb;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #484149;
+    font: inherit;
+    font-size: 14px;
+  }
+
+  .plus-subscribe button {
+    height: 42px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 6px;
+    background: #484149;
+    color: #ffffff;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .plus-subscribe button:hover {
+    background: #5b5f8d;
+  }
+
+  .plus-subscribe .subscribe-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #706b72;
+  }
+
+  .plus-subscribe .follow-credit {
+    display: block;
+    margin-top: 7px;
+    font-size: 11px;
+    color: #706b72;
+  }
+
+  @media (max-width: 440px) {
+    .plus-subscribe form {
+      flex-direction: column;
+    }
+    .plus-subscribe button {
+      width: 100%;
+    }
+  }
+</style>
+
+<section class="plus-subscribe" aria-label="Email subscriptions">
+  <p>Get new articles delivered to your inbox.</p>
+
+  <form action="https://api.follow.it/subscription-form/aVhOdlB3RVIvVVVVbEo2a1R2MDRhOHVhQmF0SWY0UlBzZm1DeXI4c1RJbXRwcGQ1angzd3ZxODI5YVBRK1U5UVpRaXlIVHpyc1p4dk5wd0pLbWdIVlptNGJ6eTBRbmE1MnNJOWx6MkloeW9VeWhyVEQ3dmRnNXVtTzVZcW0xLzd8RVVtQkp5Q1QzNEVvTUVaNVJ1ajl2WWxmZFI2YXpxdE9adVVQbDRBVXdUND0=/8" method="post">
+    <input
+      type="email"
+      name="email"
+      placeholder="Your email address"
+      aria-label="Your email address"
+      autocomplete="email"
+      required>
+    <button type="submit">Subscribe</button>
+  </form>
+
+  <div class="subscribe-note">
+    Free to subscribe. Unsubscribe anytime.
+  </div>
+
+  <a class="follow-credit" href="https://follow.it"
+     target="_blank" rel="noopener noreferrer">
+    Powered by follow.it
+  </a>
+</section>
+<!-- END EMAIL SUBSCRIPTION -->
+
+
     <h2 class="list-heading">All writing</h2>
 
     {% assign published_posts = site.posts |
