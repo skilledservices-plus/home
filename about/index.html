@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About | Skilled Services Plus</title>
+</head>
+<body>
+<script>
+fetch("../about.html")
+  .then(response => {
+    if (!response.ok) throw new Error("Page unavailable");
+    return response.text();
+  })
+  .then(html => {
+    document.open();
+    document.write(
+      html.replace(/<head([^>]*)>/i,
+        '<head$1><base href="/home/">')
+    );
+    document.close();
+  })
+  .catch(() => {
+    document.body.textContent = "Unable to load the About page.";
+  });
+</script>
+</body>
+</html>
