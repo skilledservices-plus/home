@@ -216,3 +216,67 @@ a {
     scroll-behavior: auto;
   }
 }
+
+/* The Plus Side — mobile refinements */
+@media (max-width: 600px) {
+  .top {
+    gap: 12px;
+  }
+
+  .back {
+    font-size: 0.8rem;
+    text-align: right;
+  }
+
+  .hero {
+    padding: 48px 0 54px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.7rem, 12vw, 4rem);
+    letter-spacing: -0.05em;
+    overflow-wrap: break-word;
+  }
+
+  .content {
+    padding-block: 36px 60px;
+  }
+
+  .entry {
+    padding: 28px 0 32px;
+  }
+
+  .entry h2 {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    overflow-wrap: break-word;
+  }
+
+  .article-main {
+    padding: 36px 20px 64px;
+  }
+
+  .article-title {
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 1.15;
+    overflow-wrap: break-word;
+  }
+
+  .article-meta {
+    margin-top: 32px;
+  }
+
+  .article-body {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .plus-subscribe,
+  .plus-subscribe input,
+  .plus-subscribe button {
+    max-width: 100%;
+  }
+
+  .plus-subscribe form {
+    flex-wrap: wrap;
+  }
+}
