@@ -542,6 +542,17 @@ section[id]{scroll-margin-top:100px}
 @media(max-width:480px){.ss-audience .ss-audience-copy h2{font-size:clamp(42px,10vw,58px)}.ss-audience .ss-audience-name{font-size:clamp(43px,10.3vw,60px)}.ss-audience .ss-audience-photo-shell{aspect-ratio:1.42;border-radius:65px 10px 65px 10px}.ss-audience .ss-audience-selector{min-height:64px;font-size:11px}.ss-audience .ss-audience-controls{gap:8px}.ss-audience .ss-audience-image-note{font-size:9px;left:12px;bottom:12px}}
 @media(prefers-reduced-motion:reduce){.ss-audience .ss-audience-name,.ss-audience .ss-audience-description,.ss-audience .ss-audience-photo,.ss-audience .ss-audience-selector .ss-audience-bar:after{transition:none!important}}
 
+/* Who We Serve interaction refinements — fluid text, synchronized transitions */
+.ss-audience .ss-audience-name{overflow-wrap:normal;word-break:normal}
+.ss-audience .ss-audience-name span{white-space:nowrap;display:inline-block;max-width:100%}
+.ss-audience .ss-audience-name.is-long{font-size:clamp(45px,5.15vw,79px);letter-spacing:-.07em}
+.ss-audience .ss-audience-selector .ss-audience-bar:after{transition:none;width:0}
+.ss-audience .ss-audience-selector.is-running .ss-audience-bar:after{animation:ss-audience-progress 5.8s linear forwards}
+@keyframes ss-audience-progress{from{width:0}to{width:100%}}
+@media(max-width:820px){.ss-audience .ss-audience-name.is-long{font-size:clamp(40px,8vw,70px)}}
+@media(max-width:480px){.ss-audience .ss-audience-name.is-long{font-size:clamp(38px,9vw,52px)}}
+@media(prefers-reduced-motion:reduce){.ss-audience .ss-audience-selector.is-running .ss-audience-bar:after{animation:none;width:100%}}
+
 /* Who We Serve — integrated silhouette, aligned to ss+ site */
 .ss-audience{background:#f4efe8;padding:clamp(42px,5vw,70px) 0 clamp(28px,3vw,44px)}
 .ss-audience:before{display:none}
@@ -570,6 +581,20 @@ section[id]{scroll-margin-top:100px}
  .ss-audience .ss-audience-name{font-size:clamp(48px,12vw,65px)}
  .ss-audience .ss-audience-photo-shell{aspect-ratio:1.48;margin:8px -18px 0 0;border-radius:37% 0 0 0}
  .ss-audience .ss-audience-selector{font-size:11px;min-height:58px}
+}
+
+/* Keep the Who We Serve heading anchored across all four audiences.
+   The previous flex centering shifted the entire text block when copy height changed. */
+@media (min-width:821px){
+  .ss-audience .ss-audience-main{align-items:stretch}
+  .ss-audience .ss-audience-copy{
+    justify-content:flex-start;
+    align-self:stretch;
+    padding-top:clamp(52px,6vw,90px);
+  }
+}
+@media (max-width:820px){
+  .ss-audience .ss-audience-copy{justify-content:flex-start;align-self:stretch}
 }
 </style>
 </head>
@@ -763,28 +788,73 @@ if(pillarArea){
   {title:'Startups.',description:'Building the processes, teams, and systems needed to grow.'},
   {title:'E-commerce.',description:'Better workflows, coordinated operations, and room to scale.'}
  ];
- const title=root.querySelector('#ss-audience-name'),desc=root.querySelector('#ss-audience-description');
- const titleWrap=root.querySelector('.ss-audience-name'),buttons=Array.from(root.querySelectorAll('[data-audience]'));
+ const name=root.querySelector('#ss-audience-name');
+ const description=root.querySelector('#ss-audience-description');
+ const titleWrap=root.querySelector('.ss-audience-name');
+ const buttons=Array.from(root.querySelectorAll('[data-audience]'));
  const photos=Array.from(root.querySelectorAll('[data-photo]'));
- const reduced=window.matchMedia('(prefers-reduced-motion:reduce)');
- let active=0,timer=null,swap=null,paused=false;
- function render(i){
-   active=(i+entries.length)%entries.length;
-   buttons.forEach((b,j)=>{b.setAttribute('aria-selected',String(j===active));b.tabIndex=j===active?0:-1;b.classList.remove('ss-paused')});
-   photos.forEach((p,j)=>{p.classList.toggle('is-current',j===active);p.setAttribute('aria-hidden',String(j!==active))});
-   clearTimeout(swap);
-   if(reduced.matches){title.textContent=entries[active].title;desc.textContent=entries[active].description;return;}
-   titleWrap.classList.add('outgoing');desc.classList.add('outgoing');
-   swap=setTimeout(()=>{title.textContent=entries[active].title;desc.textContent=entries[active].description;titleWrap.classList.remove('outgoing');desc.classList.remove('outgoing')},270);
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+ const INTERVAL=5800, FADE=300;
+ let active=0, interval=null, swap=null;
+ function stop(){window.clearInterval(interval);interval=null;}
+ function progress(){
+   buttons.forEach(b=>b.classList.remove('is-running'));
+   if(reduced.matches)return;
+   // Restart the bar even when manually selecting the same item.
+   void root.offsetWidth;
+   buttons[active].classList.add('is-running');
  }
- function stop(){clearInterval(timer);timer=null;}
- function start(){stop();if(!reduced.matches&&!paused&&!document.hidden)timer=setInterval(()=>render(active+1),4800);}
- buttons.forEach((b,i)=>{b.addEventListener('click',()=>{render(i);start()});b.addEventListener('keydown',e=>{let next=null;if(e.key==='ArrowRight')next=(i+1)%4;else if(e.key==='ArrowLeft')next=(i+3)%4;else if(e.key==='Home')next=0;else if(e.key==='End')next=3;if(next!==null){e.preventDefault();render(next);buttons[next].focus()}})});
- root.addEventListener('mouseenter',()=>{paused=true;stop()});root.addEventListener('mouseleave',()=>{paused=false;start()});
- root.addEventListener('focusin',()=>{paused=true;stop()});root.addEventListener('focusout',e=>{if(!root.contains(e.relatedTarget)){paused=false;start()}});
- document.addEventListener('visibilitychange',start);
- if(reduced.addEventListener)reduced.addEventListener('change',()=>{render(active);start()});
- render(0);start();
+ function select(index, initial){
+   active=(index+entries.length)%entries.length;
+   window.clearTimeout(swap);
+   buttons.forEach((b,j)=>{
+     const selected=j===active;
+     b.setAttribute('aria-selected',String(selected));
+     b.tabIndex=selected?0:-1;
+   });
+   if(initial||reduced.matches){
+     titleWrap.classList.toggle('is-long',active===3);
+     name.textContent=entries[active].title;
+     description.textContent=entries[active].description;
+     photos.forEach((p,j)=>{p.classList.toggle('is-current',j===active);p.setAttribute('aria-hidden',String(j!==active));});
+     titleWrap.classList.remove('outgoing');description.classList.remove('outgoing');
+   }else{
+     titleWrap.classList.add('outgoing');description.classList.add('outgoing');
+     // Swap photograph and copy together at the midpoint of the text fade.
+     swap=window.setTimeout(()=>{
+       titleWrap.classList.toggle('is-long',active===3);
+       name.textContent=entries[active].title;
+       description.textContent=entries[active].description;
+       photos.forEach((p,j)=>{p.classList.toggle('is-current',j===active);p.setAttribute('aria-hidden',String(j!==active));});
+       titleWrap.classList.remove('outgoing');description.classList.remove('outgoing');
+     },FADE);
+   }
+   progress();
+ }
+ function start(){
+   stop();
+   if(!reduced.matches&&!document.hidden){interval=window.setInterval(()=>select(active+1,false),INTERVAL);}
+ }
+ function choose(index){select(index,false);start();}
+ buttons.forEach((b,i)=>{
+   b.addEventListener('click',()=>choose(i));
+   b.addEventListener('keydown',e=>{
+     let next=null;
+     if(e.key==='ArrowRight')next=(i+1)%buttons.length;
+     else if(e.key==='ArrowLeft')next=(i+buttons.length-1)%buttons.length;
+     else if(e.key==='Home')next=0;
+     else if(e.key==='End')next=buttons.length-1;
+     if(next!==null){e.preventDefault();choose(next);buttons[next].focus();}
+   });
+ });
+ // Do not pause simply because the pointer is over the section:
+ // that prevented automatic rotation for visitors reading it.
+ document.addEventListener('visibilitychange',()=>{
+   if(document.hidden){stop();buttons.forEach(b=>b.classList.remove('is-running'));}
+   else{progress();start();}
+ });
+ if(reduced.addEventListener)reduced.addEventListener('change',()=>{select(active,true);start();});
+ select(0,true);start();
 })();
 </script>
 
