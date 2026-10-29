@@ -19,3 +19,4 @@ plugins:
   - jekyll-feed
 feed:
   path: /blog/feed.xml
+# Rebuild for October 30 blog publication
